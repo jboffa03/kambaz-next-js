@@ -1,4 +1,6 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 /* eslint-disable react/jsx-key */
+
 "use client"
 import { Table } from "react-bootstrap";
 import { FaUserCircle } from "react-icons/fa";

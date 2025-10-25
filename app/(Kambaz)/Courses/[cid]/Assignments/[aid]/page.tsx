@@ -18,8 +18,19 @@ import * as db from "../../../../Database";
 
 export default function AssignmentEditor(): JSX.Element {
   const { cid, aid } = useParams();
+  interface Assignment {
+    _id: string;
+    course: string;
+    title: string;
+    description: string;
+    points: number;
+    dueDate: string;
+    availableFrom: string;
+    availableUntil: string;
+  }
+
   const assignment = db.assignments.find(
-    (assignment: any) => assignment.course === cid && assignment._id === aid
+    (assignment: Assignment) => assignment.course === cid && assignment._id === aid
   );
 
   if (!assignment) {

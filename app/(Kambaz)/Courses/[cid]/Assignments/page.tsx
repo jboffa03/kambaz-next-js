@@ -1,4 +1,3 @@
-/* eslint-disable react/jsx-key */
 "use client"
 import { useParams } from "next/navigation";
 import * as db from "../../../Database";
@@ -12,9 +11,18 @@ import { FaPlus } from "react-icons/fa6";
 import { IoEllipsisVertical, IoNewspaperOutline } from "react-icons/io5";
 import { CiSearch } from "react-icons/ci";
 
+interface Assignment {
+  _id: string;
+  course: string;
+  title: string;
+  availableUntil?: string;
+  dueDate?: string;
+  points?: number;
+}
+
 export default function Assignments() {
   const { cid } = useParams();
-  const assignments = db.assignments.filter((assignment: any) => assignment.course === cid);
+  const assignments = db.assignments.filter((assignment: Assignment) => assignment.course === cid);
 
   return (
     <div>
@@ -71,7 +79,7 @@ export default function Assignments() {
           </div>
 
           <ListGroup className="wd-assignments rounded-0">
-            {assignments.map((assignment: any) => (
+            {assignments.map((assignment: Assignment) => (
               <ListGroupItem key={assignment._id} className="wd-assignments p-3 ps-1">
                 <Link
                   href={`/Courses/${cid}/Assignments/${assignment._id}`}
