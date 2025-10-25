@@ -1,0 +1,92 @@
+[
+  {
+    "_id": "A101",
+    "title": "Propulsion Assignment",
+    "course": "RS101",
+    "dueDate": "2024-07-10",
+    "availableFrom": "2024-06-20",
+    "availableUntil": "2024-07-10",
+    "description": "Analyze propulsion systems and submit a report.",
+    "points": 20
+  },
+  {
+    "_id": "A102",
+    "title": "Combustion Analysis",
+    "course": "RS101",
+    "dueDate": "2024-07-17",
+    "availableFrom": "2024-06-27",
+    "availableUntil": "2024-07-17",
+    "description": "Perform combustion calculations and answer related questions.",
+    "points": 15
+  },
+  {
+    "_id": "A103",
+    "title": "Nozzle Design Project",
+    "course": "RS101",
+    "dueDate": "2024-07-24",
+    "availableFrom": "2024-07-04",
+    "availableUntil": "2024-07-24",
+    "description": "Design a nozzle and present your findings.",
+    "points": 25
+  },
+  {
+    "_id": "A201",
+    "title": "Aerodynamics Quiz",
+    "course": "RS102",
+    "dueDate": "2024-07-12",
+    "availableFrom": "2024-06-22",
+    "availableUntil": "2024-07-12",
+    "description": "Quiz on basic aerodynamics concepts.",
+    "points": 10
+  },
+  {
+    "_id": "A202",
+    "title": "Flow Analysis",
+    "course": "RS102",
+    "dueDate": "2024-07-19",
+    "availableFrom": "2024-06-29",
+    "availableUntil": "2024-07-19",
+    "description": "Analyze fluid flow in different scenarios.",
+    "points": 20
+  },
+  {
+    "_id": "A203",
+    "title": "Heating Analysis",
+    "course": "RS102",
+    "dueDate": "2024-07-26",
+    "availableFrom": "2024-07-06",
+    "availableUntil": "2024-07-26",
+    "description": "Evaluate heating effects in aerospace structures.",
+    "points": 15
+  },
+  {
+    "_id": "A301",
+    "title": "Structural Design Task",
+    "course": "RS103",
+    "dueDate": "2024-07-14",
+    "availableFrom": "2024-06-24",
+    "availableUntil": "2024-07-14",
+    "description": "Complete a structural design for a rocket component.",
+    "points": 20
+  },
+  {
+    "_id": "A302",
+    "title": "Orbital Calculations",
+    "course": "RS103",
+    "dueDate": "2024-07-21",
+    "availableFrom": "2024-07-01",
+    "availableUntil": "2024-07-21",
+    "description": "Calculate orbital parameters for a satellite.",
+    "points": 20
+  },
+  {
+    "_id": "A303",
+    "title": "Systems Engineering Exam",
+    "course": "RS103",
+    "dueDate": "2024-07-28",
+    "availableFrom": "2024-07-08",
+    "availableUntil": "2024-07-28",
+    "description": "Final exam covering systems engineering topics.",
+    "points": 30
+  }
+]

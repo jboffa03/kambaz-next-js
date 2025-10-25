@@ -2,31 +2,34 @@
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import "../../styles.css";
+import { ListGroupItem } from "react-bootstrap";
+
 
 export default function CourseNavigation() {
-  const pathname = usePathname() || "";
-
+  const pathname = usePathname();
+  const courseIdFromPath = pathname.split('/')[2]; 
+  
   const links = [
-    { href: "/Courses/1234/Home", id: "wd-course-home-link", label: "Home" },
-    { href: "/Courses/1234/Modules", id: "wd-course-modules-link", label: "Modules" },
-    { href: "/Courses/1234/Piazza", id: "wd-course-piazza-link", label: "Piazza" },
-    { href: "/Courses/1234/Zoom", id: "wd-course-zoom-link", label: "Zoom" },
-    { href: "/Courses/1234/Assignments", id: "wd-course-assignments-link", label: "Assignments" },
-    { href: "/Courses/1234/Quizzes", id: "wd-course-quizzes-link", label: "Quizzes" },
-    { href: "/Courses/1234/People/Table", id: "wd-course-people-link", label: "People" },
+    {label: "Home", path: `/Courses/${courseIdFromPath}/Home`},
+    {label: "Modules", path: `/Courses/${courseIdFromPath}/Modules`},
+    {label: "Piazza", path: `https://piazza.com`},
+    {label: "Zoom", path: `https://zoom.us`},
+    {label: "Assignments", path: `/Courses/${courseIdFromPath}/Assignments`},
+    {label: "Quizzes", path: `/Courses/${courseIdFromPath}/Quizzes`},
+    {label: "Grades", path: `/Courses/${courseIdFromPath}/Grades`},
+    {label: "People", path: `/Courses/${courseIdFromPath}/People/Table`},
   ];
-
+ 
   return (
     <div id="wd-courses-navigation" className="wd list-group fs-5 rounded-0">
-      {links.map((link) => {
-        const isActive = pathname === link.href || pathname.startsWith(link.href);
-        const className = `list-group-item ${isActive ? "active" : "text-danger"} border-0`;
-        return (
-          <Link key={link.href} href={link.href} id={link.id} className={className}>
-            {link.label}
-          </Link>
-        );
-      })}
+      {links.map((link) => (
+        <ListGroupItem key={link.path} as={Link} href={link.path}
+          className={`bg-white text-center border-0
+              ${pathname.includes(link.label) ? "text-black" : "text-danger bg-black"}`}>
+          <br />
+          {link.label}
+        </ListGroupItem>
+      ))}
     </div>
   );
 }
