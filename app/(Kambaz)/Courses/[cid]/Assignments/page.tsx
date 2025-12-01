@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 "use client";
 import { useParams } from "next/navigation";
 import Link from "next/link";
@@ -14,7 +15,7 @@ import { CiSearch } from "react-icons/ci";
 export default function Assignments() {
   const { cid } = useParams();
   const dispatch = useDispatch();
-  const { assignments } = useSelector((state) => state.assignmentsReducer);
+  const { assignments } = useSelector((state: any) => state.assignmentsReducer);
 
   const courseAssignments = assignments.filter(a => a.course === cid);
 
