@@ -1,10 +1,9 @@
-/* eslint-disable react-hooks/rules-of-hooks */
-/* eslint-disable @next/next/no-async-client-component */
+/* eslint-disable @typescript-eslint/no-explicit-any */
+
 "use client";
 import { ReactNode, useState } from "react";
 import CourseNavigation from "./Navigation";
 import { FaAlignJustify } from "react-icons/fa";
-import { courses } from "../../Database";
 import Breadcrumb from "./Breadcrumb";
 import { useSelector } from "react-redux";
 import { useParams } from "next/navigation";
