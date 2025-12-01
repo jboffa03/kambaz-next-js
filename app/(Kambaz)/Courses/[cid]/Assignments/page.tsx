@@ -1,5 +1,5 @@
 "use client";
-import { useParams, useRouter } from "next/navigation";
+import { useParams } from "next/navigation";
 import Link from "next/link";
 import { ListGroup, ListGroupItem, Button } from "react-bootstrap";
 import { BsGripVertical } from "react-icons/bs";
@@ -13,7 +13,6 @@ import { CiSearch } from "react-icons/ci";
 
 export default function Assignments() {
   const { cid } = useParams();
-  const router = useRouter();
   const dispatch = useDispatch();
   const { assignments } = useSelector((state) => state.assignmentsReducer);
 

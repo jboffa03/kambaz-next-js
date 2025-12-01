@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 "use client";
 
 import { useParams, useRouter } from "next/navigation";
@@ -6,6 +7,7 @@ import { addAssignment, updateAssignment } from "../reducer";
 import { Container, Form, Button, Row, Col } from "react-bootstrap";
 import { useState } from "react";
 import { v4 as uuidv4 } from "uuid";
+import { ParamValue } from "next/dist/server/request/params";
 
 export default function AssignmentEditor() {
   const { cid, aid } = useParams();
@@ -15,7 +17,7 @@ export default function AssignmentEditor() {
   const isNew = aid === "new";
   const { assignments } = useSelector((state) => state.assignmentsReducer);
 
-  const dbAssign = assignments.find(a => a._id === aid);
+  const dbAssign = assignments.find((a: { _id: ParamValue; }) => a._id === aid);
 
   const [form, setForm] = useState(
     dbAssign || {

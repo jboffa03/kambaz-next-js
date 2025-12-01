@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 "use client";
 import { useState } from "react";
 import Link from "next/link";
@@ -109,18 +110,16 @@ export default function Dashboard() {
           <Col
             key={course._id}
             className="wd-dashboard-course"
-            style={{ width: "300px" }}
-          >
-            <Card>
-              <CardBody>
-                <CardTitle>{course.name}</CardTitle>
-
-                <CardText
-                  className="overflow-hidden"
-                  style={{ height: "100px" }}
-                >
-                  {course.description}
-                </CardText>
+            style={{ width: "300px" }}>
+            <Card> 
+              <CardImg src="/images/webdev.jpg" variant="top" width="100%" height={160} /> 
+              <CardBody className="card-body"> 
+                <CardTitle className="wd-dashboard-course-title text-nowrap overflow-hidden"> 
+                  {course.name} 
+                  </CardTitle> 
+                  <CardText className="wd-dashboard-course-description overflow-hidden" style={{ height: "100px" }}> 
+                    {course.description} 
+                    </CardText>
 
                 {isEnrolled(course._id) ? (
                   <Link href={`/Courses/${course._id}/Home`}>
@@ -187,3 +186,7 @@ export default function Dashboard() {
     </div>
   );
 }
+
+
+
+

@@ -1,13 +1,12 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 "use client"
 import { useState } from "react";
 import { useParams } from "next/navigation";
-import * as db from "../../../Database";
 import { FormControl, ListGroup, ListGroupItem } from "react-bootstrap";
 import ModulesControls from "./ModulesControls";
 import "../../../styles.css"
 import { BsGripVertical } from "react-icons/bs";
 import LessonControlButtons from "./LessonControlButtons";
-import { v4 as uuidv4 } from "uuid";
 import ModuleControlButtons from "./ModuleControlButtons";
 import { addModule, editModule, updateModule, deleteModule }
   from "./reducer";
