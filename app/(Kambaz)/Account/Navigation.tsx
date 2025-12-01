@@ -1,28 +1,21 @@
-'use client';
+"use client";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import "../styles.css";
+import { Nav, NavItem, NavLink } from "react-bootstrap";
+import { useSelector } from "react-redux";
 
-export default function CourseNavigation() {
-  const pathname = usePathname() || "";
 
-  const links = [
-    { href: "/Account/Signin", id: "wd-account-signin", label: "Signin" },
-    { href: "/Account/Signup", id: "wd-account-signup", label: "Signup" },
-    { href: "/Account/Profile", id: "wd-account-profile", label: "Profile" },
-  ];
-
-  return (
-    <div id="wd-courses-navigation" className="wd list-group fs-5 rounded-0">
-      {links.map((link) => {
-        const isActive = pathname === link.href || pathname.startsWith(link.href);
-        const className = `list-group-item ${isActive ? "active" : "text-danger"} border-0`;
-        return (
-          <Link key={link.href} href={link.href} id={link.id} className={className}>
-            {link.label}
-          </Link>
-        );
-      })}
-    </div>
-  );
-}
+export default function AccountNavigation() {
+  const { currentUser } = useSelector((state: any) => state.accountReducer);
+  const links = currentUser ? ["Profile"] : ["Signin", "Signup"];
+ const pathname = usePathname();
+ 
+ return (
+   <Nav variant="pills">
+     {links.map((link) => (
+       <NavItem key={link}>
+         <NavLink as={Link} href={link} active={pathname.endsWith(link.toLowerCase())}>
+           {link} </NavLink> </NavItem>
+     ))}
+   </Nav>
+);}

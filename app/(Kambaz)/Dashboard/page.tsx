@@ -1,123 +1,189 @@
-/* eslint-disable react/jsx-key */
+"use client";
+import { useState } from "react";
 import Link from "next/link";
 import * as db from "../Database";
-import { Row, Col, Card, CardImg, CardBody, CardTitle, CardText, Button } from "react-bootstrap";
+import {
+  Row,
+  Col,
+  Card,
+  CardImg,
+  CardBody,
+  CardTitle,
+  CardText,
+  Button,
+  FormControl,
+} from "react-bootstrap";
+import { useDispatch, useSelector } from "react-redux";
+import {
+  addNewCourse,
+  deleteCourse,
+  updateCourse,
+  toggleShowEnrollments,
+  enrollCourse,
+  unenrollCourse,
+} from "../Courses/reducer";
+
 export default function Dashboard() {
-  const courses = db.courses;
+  const dispatch = useDispatch();
+  const { currentUser } = useSelector((state: any) => state.accountReducer);
+  const { courses, enrollments, showAllCourses } = useSelector(
+    (state: any) => state.coursesReducer
+  );
+
+  const [course, setCourse] = useState<any>({
+    _id: "0",
+    name: "New Course",
+    number: "New Number",
+    startDate: "2023-09-10",
+    endDate: "2023-12-15",
+    image: "/images/reactjs.jpg",
+    description: "New Description",
+  });
+
+  if (!currentUser) return null;
+
+  const isEnrolled = (courseId: string) =>
+    enrollments.some(
+      (e: any) => e.user === currentUser._id && e.course === courseId
+    );
+
+  const visibleCourses = showAllCourses
+    ? courses
+    : courses.filter((c: any) => isEnrolled(c._id));
+
   return (
     <div id="wd-dashboard">
-      <h1 id="wd-dashboard-title">Dashboard</h1> <hr />
-      <h2 id="wd-dashboard-published">Published Courses ({courses.length})</h2> <hr />
-      <div id="wd-dashboard-courses">
-        <Row xs={1} md={5} className="g-4">
-          {courses.map((course) => (
-            <Col className="wd-dashboard-course" style={{ width: "300px" }}>
-              <Card>
-                <Link href={`/Courses/${course._id}/Home`}
-                      className="wd-dashboard-course-link text-decoration-none text-dark" >
-                  <CardImg src="/images/webdev.jpg" variant="top" width="100%" height={160} />
-                  <CardBody className="card-body">
-                    <CardTitle className="wd-dashboard-course-title text-nowrap overflow-hidden">
-                      {course.name} </CardTitle>
-                    <CardText className="wd-dashboard-course-description overflow-hidden" style={{ height: "100px" }}>
-                      {course.description} </CardText>
-                    <Button variant="primary"> Go </Button>
-                  </CardBody>
-                </Link>
-              </Card>
-            </Col>
-          ))}
-        </Row>
-      </div>
-    </div>);}
+      <h1 id="wd-dashboard-title">Dashboard</h1>
+      <hr />
 
+      <h5>
+        New Course
+        <button
+          className="btn btn-primary float-end me-2"
+          onClick={() => dispatch(toggleShowEnrollments())}
+        >
+          {showAllCourses ? "My Courses" : "Enrollments"}
+        </button>
+        {currentUser.role === "FACULTY" && (
+          <>
+            <button
+              className="btn btn-secondary float-end me-2"
+              onClick={() => dispatch(addNewCourse(course))}
+            >
+              Add
+            </button>
 
-//  <Col className="wd-dashboard-course" style={{ width: "270px" }}>  {/* Course 2 */}
-//         <Card>
-//         <Link href="/Courses/3450/Home"
-//               className="wd-dashboard-course-link text-decoration-none text-dark">
-//           <CardImg variant="top" src="/images/va.jpg" width="100%" height={150}/>
-//           <CardBody>
-//           <CardTitle className="wd-dashboard-course-title text-nowrap overflow-hidden">COMM3450 Voice Over</CardTitle>
-//           <CardText  className="wd-dashboard-course-description overflow-hidden" style={{ height: "50px" }}>
-//             Recording and Voice Over</CardText>
-//           <Button variant="primary">Go</Button>
-//           </CardBody>
-//         </Link>
-//         </Card>
-//       </Col>
+            <button
+              className="btn btn-warning float-end me-2"
+              onClick={() => dispatch(updateCourse(course))}
+            >
+              Update
+            </button>
+          </>
+        )}
+      </h5>
 
-//       <Col className="wd-dashboard-course" style={{ width: "270px" }}>  {/* Course 3 */}
-//         <Card>
-//         <Link href="/Courses/4550/Home"
-//               className="wd-dashboard-course-link text-decoration-none text-dark">
-//           <CardImg variant="top" src="/images/webdev.jpg" width="100%" height={150}/>
-//           <CardBody>
-//           <CardTitle className="wd-dashboard-course-title text-nowrap overflow-hidden">CS4550 Web Dev</CardTitle>
-//           <CardText  className="wd-dashboard-course-description overflow-hidden" style={{ height: "50px" }}>
-//             Developing for the Web</CardText>
-//           <Button variant="primary">Go</Button>
-//           </CardBody>
-//         </Link>
-//         </Card>
-//       </Col>
-      
-//       <Col className="wd-dashboard-course" style={{ width: "270px" }}>  {/* Course 4 */}
-//         <Card>
-//         <Link href="/Courses/1110/Home"
-//               className="wd-dashboard-course-link text-decoration-none text-dark">
-//           <CardImg variant="top" src="/images/games.jpg" width="100%" height={150}/>
-//           <CardBody>
-//           <CardTitle className="wd-dashboard-course-title text-nowrap overflow-hidden">GAME1110 G&S</CardTitle>
-//           <CardText  className="wd-dashboard-course-description overflow-hidden" style={{ height: "50px" }}>
-//             Games and Society</CardText>
-//           <Button variant="primary">Go</Button>
-//           </CardBody>
-//         </Link>
-//         </Card>
-//       </Col>
+      <br />
+      {currentUser.role === "FACULTY" && (
+        <>
+          <FormControl
+            defaultValue={course.name}
+            className="mb-2"
+            onChange={(e) => setCourse({ ...course, name: e.target.value })}
+          />
+          <FormControl
+            defaultValue={course.description}
+            onChange={(e) =>
+              setCourse({ ...course, description: e.target.value })
+            }
+          />
+        </>
+      )}
 
-//       <Col className="wd-dashboard-course" style={{ width: "270px" }}>  {/* Course 5 */}
-//         <Card>
-//         <Link href="/Courses/3601/Home"
-//               className="wd-dashboard-course-link text-decoration-none text-dark">
-//           <CardImg variant="top" src="/images/dsp.webp" width="100%" height={150}/>
-//           <CardBody>
-//           <CardTitle className="wd-dashboard-course-title text-nowrap overflow-hidden">MUST3601 DSP</CardTitle>
-//           <CardText  className="wd-dashboard-course-description overflow-hidden" style={{ height: "50px" }}>
-//             Digital Audio Signal Processing</CardText>
-//           <Button variant="primary">Go</Button>
-//           </CardBody>
-//         </Link>
-//         </Card>
-//       </Col>
+      <hr />
+      <h2>Published Courses ({visibleCourses.length})</h2>
+      <hr />
 
-//       <Col className="wd-dashboard-course" style={{ width: "270px" }}>  {/* Course 6 */}
-//         <Card>
-//         <Link href="/Courses/4530/Home"
-//               className="wd-dashboard-course-link text-decoration-none text-dark">
-//           <CardImg variant="top" src="/images/swe.jpg" width="100%" height={150}/>
-//           <CardBody>
-//           <CardTitle className="wd-dashboard-course-title text-nowrap overflow-hidden">CS4530 SWE</CardTitle>
-//           <CardText  className="wd-dashboard-course-description overflow-hidden" style={{ height: "50px" }}>
-//             Fundamentals of Software Engineering</CardText>
-//           <Button variant="primary">Go</Button>
-//           </CardBody>
-//         </Link>
-//         </Card>
-//       </Col>
+      <Row xs={1} md={5} className="g-4">
+        {visibleCourses.map((course: any) => (
+          <Col
+            key={course._id}
+            className="wd-dashboard-course"
+            style={{ width: "300px" }}
+          >
+            <Card>
+              <CardBody>
+                <CardTitle>{course.name}</CardTitle>
 
-//       <Col className="wd-dashboard-course" style={{ width: "270px" }}>  {/* Course 7 */}
-//         <Card>
-//         <Link href="/Courses/3973/Home"
-//               className="wd-dashboard-course-link text-decoration-none text-dark">
-//           <CardImg variant="top" src="/images/aimusic.jpg" width="100%" height={150}/>
-//           <CardBody>
-//           <CardTitle className="wd-dashboard-course-title text-nowrap overflow-hidden">MUST3973 AI in Music</CardTitle>
-//           <CardText  className="wd-dashboard-course-description overflow-hidden" style={{ height: "50px" }}>
-//             AI for Musical Innovation</CardText>
-//           <Button variant="primary">Go</Button>
-//           </CardBody>
-//         </Link>
-//         </Card>
-//       </Col> 
+                <CardText
+                  className="overflow-hidden"
+                  style={{ height: "100px" }}
+                >
+                  {course.description}
+                </CardText>
+
+                {isEnrolled(course._id) ? (
+                  <Link href={`/Courses/${course._id}/Home`}>
+                    <Button variant="primary">Go</Button>
+                  </Link>
+                ) : (
+                  <Button variant="secondary" disabled>
+                    Locked
+                  </Button>
+                )}
+
+                {isEnrolled(course._id) ? (
+                  <button
+                    className="btn btn-danger float-end"
+                    onClick={() =>
+                      dispatch(
+                        unenrollCourse({
+                          userId: currentUser._id,
+                          courseId: course._id,
+                        })
+                      )
+                    }
+                  >
+                    Unenroll
+                  </button>
+                ) : (
+                  <button
+                    className="btn btn-success float-end"
+                    onClick={() =>
+                      dispatch(
+                        enrollCourse({
+                          userId: currentUser._id,
+                          courseId: course._id,
+                        })
+                      )
+                    }
+                  >
+                    Enroll
+                  </button>
+                )}
+
+                {currentUser.role === "FACULTY" && (
+                  <>
+                    <button
+                      className="btn btn-warning me-2 float-end"
+                      onClick={() => setCourse(course)}
+                    >
+                      Edit
+                    </button>
+
+                    <button
+                      className="btn btn-danger float-end"
+                      onClick={() => dispatch(deleteCourse(course._id))}
+                    >
+                      Delete
+                    </button>
+                  </>
+                )}
+              </CardBody>
+            </Card>
+          </Col>
+        ))}
+      </Row>
+    </div>
+  );
+}

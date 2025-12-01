@@ -1,28 +1,29 @@
-"use client"
-import { useParams } from "next/navigation";
-import * as db from "../../../Database";
+"use client";
+import { useParams, useRouter } from "next/navigation";
 import Link from "next/link";
-import "../../../styles.css"
+import { ListGroup, ListGroupItem, Button } from "react-bootstrap";
+import { BsGripVertical } from "react-icons/bs";
+import { FaPlus, FaTrash } from "react-icons/fa6";
+import { IoEllipsisVertical, IoNewspaperOutline } from "react-icons/io5";
+import { useSelector, useDispatch } from "react-redux";
+import { deleteAssignment } from "./reducer";
 import LessonControlButtons from "../Modules/LessonControlButtons";
 import AssignmentControls from "./AssignmentControls";
-import { ListGroup, ListGroupItem } from "react-bootstrap";
-import { BsGripVertical } from "react-icons/bs";
-import { FaPlus } from "react-icons/fa6";
-import { IoEllipsisVertical, IoNewspaperOutline } from "react-icons/io5";
 import { CiSearch } from "react-icons/ci";
-
-interface Assignment {
-  _id: string;
-  course: string;
-  title: string;
-  availableUntil?: string;
-  dueDate?: string;
-  points?: number;
-}
 
 export default function Assignments() {
   const { cid } = useParams();
-  const assignments = db.assignments.filter((assignment: Assignment) => assignment.course === cid);
+  const router = useRouter();
+  const dispatch = useDispatch();
+  const { assignments } = useSelector((state) => state.assignmentsReducer);
+
+  const courseAssignments = assignments.filter(a => a.course === cid);
+
+  const confirmDelete = (id: string) => {
+    if (confirm("Are you sure you want to delete this assignment?")) {
+      dispatch(deleteAssignment(id));
+    }
+  };
 
   return (
     <div>
@@ -48,10 +49,9 @@ export default function Assignments() {
               style={{ width: "220px", height: "40px", paddingLeft: "36px" }}
             />
           </div>
+            <AssignmentControls />
         </div>
-        <AssignmentControls />
       </div>
-      <br />
 
       <ListGroup className="rounded-0" id="wd-assignments">
         <ListGroupItem className="wd-module p-0 mb-5 fs-5 border-gray">
@@ -69,23 +69,25 @@ export default function Assignments() {
                   fontSize: "0.75rem",
                   background: "white",
                   lineHeight: 1,
-                }}
-              >
+                }}>
                 40% of Total
               </span>
               <FaPlus className="position-relative" style={{ bottom: "1px" }} />
               <IoEllipsisVertical className="fs-4" />
             </div>
           </div>
+          </ListGroupItem>
+          </ListGroup>
+            
 
-          <ListGroup className="wd-assignments rounded-0">
-            {assignments.map((assignment: Assignment) => (
-              <ListGroupItem key={assignment._id} className="wd-assignments p-3 ps-1">
-                <Link
-                  href={`/Courses/${cid}/Assignments/${assignment._id}`}
-                  className="w-100 p-3 ps-1 text-reset text-decoration-none"
-                >
-                  <BsGripVertical className="me-2 fs-3" />
+      <ListGroup>
+        {courseAssignments.map((assignment) => (
+          <ListGroupItem key={assignment._id} className="d-flex justify-content-between align-items-start">
+            <Link
+              href={`/Courses/${cid}/Assignments/${assignment._id}`}
+              className="text-decoration-none text-dark"
+              style={{ flexGrow: 1 }}>
+              <BsGripVertical className="me-2 fs-3" />
                   <IoNewspaperOutline className="text-success me-2 fs-3" />
                   {assignment.title} <LessonControlButtons />
                   <br />
@@ -95,11 +97,13 @@ export default function Assignments() {
                     <br />
                     <b> Due</b> {assignment.dueDate || "TBD"} | {assignment.points || "100"} points
                   </div>
-                </Link>
-              </ListGroupItem>
-            ))}
-          </ListGroup>
-        </ListGroupItem>
+            </Link>
+
+            <Button variant="outline-danger" size="sm" onClick={() => confirmDelete(assignment._id)}>
+            <FaTrash />
+            </Button>
+          </ListGroupItem>
+        ))}
       </ListGroup>
     </div>
   );
