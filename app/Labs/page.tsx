@@ -1,5 +1,5 @@
 import Link from "next/link";
-import ReduxExamples from "./Lab4/ReduxExamples";
+import ReduxExamples from "./Lab4/ReduxExamples/ReduxExamples";
 export default function Labs() {
   return (
     <div id="wd-labs">
