@@ -15,7 +15,7 @@ export default function AssignmentEditor() {
   const router = useRouter();
 
   const isNew = aid === "new";
-  const { assignments } = useSelector((state) => state.assignmentsReducer);
+  const { assignments } = useSelector((state: any) => state.assignmentsReducer);
 
   const dbAssign = assignments.find((a: { _id: ParamValue; }) => a._id === aid);
 
