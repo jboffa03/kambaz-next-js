@@ -1,4 +1,5 @@
 import Link from "next/link";
+import ReduxExamples from "./Lab4/ReduxExamples";
 export default function Labs() {
   return (
     <div id="wd-labs">
@@ -30,6 +31,7 @@ export default function Labs() {
             Kambaz{" "}
           </Link>{" "}
         </li>
+        <ReduxExamples />
       </ul>
     </div>
   );
