@@ -11,13 +11,14 @@ import { deleteAssignment } from "./reducer";
 import LessonControlButtons from "../Modules/LessonControlButtons";
 import AssignmentControls from "./AssignmentControls";
 import { CiSearch } from "react-icons/ci";
+import { ParamValue } from "next/dist/server/request/params";
 
 export default function Assignments() {
   const { cid } = useParams();
   const dispatch = useDispatch();
   const { assignments } = useSelector((state: any) => state.assignmentsReducer);
 
-  const courseAssignments = assignments.filter(a => a.course === cid);
+  const courseAssignments = assignments.filter((a: { course: ParamValue; }) => a.course === cid);
 
   const confirmDelete = (id: string) => {
     if (confirm("Are you sure you want to delete this assignment?")) {
