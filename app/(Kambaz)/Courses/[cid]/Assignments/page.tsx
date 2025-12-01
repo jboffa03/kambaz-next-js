@@ -12,6 +12,7 @@ import LessonControlButtons from "../Modules/LessonControlButtons";
 import AssignmentControls from "./AssignmentControls";
 import { CiSearch } from "react-icons/ci";
 import { ParamValue } from "next/dist/server/request/params";
+import { Key, ReactElement, JSXElementConstructor, ReactNode, ReactPortal } from "react";
 
 export default function Assignments() {
   const { cid } = useParams();
@@ -82,7 +83,12 @@ export default function Assignments() {
             
 
       <ListGroup>
-        {courseAssignments.map((assignment) => (
+        {courseAssignments.map((assignment: 
+        { _id: Key | null | undefined; 
+          title: string | number | bigint | boolean | ReactElement<unknown, string | JSXElementConstructor<any>> | Iterable<ReactNode> | ReactPortal | Promise<string | number | bigint | boolean | ReactPortal | ReactElement<unknown, string | JSXElementConstructor<any>> | Iterable<ReactNode> | null | undefined> | null | undefined; 
+          availableUntil: any; 
+          dueDate: any; 
+          points: any; }) => (
           <ListGroupItem key={assignment._id} className="d-flex justify-content-between align-items-start">
             <Link
               href={`/Courses/${cid}/Assignments/${assignment._id}`}
