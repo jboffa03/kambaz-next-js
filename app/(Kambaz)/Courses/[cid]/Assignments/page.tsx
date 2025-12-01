@@ -84,8 +84,8 @@ export default function Assignments() {
 
       <ListGroup>
         {courseAssignments.map((assignment: 
-        { _id: Key | null; 
-          title: string | null; 
+        { _id: string; 
+          title: string; 
           availableUntil: any; 
           dueDate: any; 
           points: any; }) => (
