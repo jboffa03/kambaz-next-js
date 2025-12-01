@@ -1,3 +1,5 @@
+"use client";
+
 import { useState } from "react";
 import { ListGroup, ListGroupItem, Button, FormControl } from "react-bootstrap";
 
