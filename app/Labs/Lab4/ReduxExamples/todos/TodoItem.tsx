@@ -1,11 +1,14 @@
 import React from "react";
 import { useDispatch } from "react-redux";
 import { deleteTodo, setTodo } from "./todosReducer";
-import { todo } from "node:test";
 import { ListGroupItem, Button } from "react-bootstrap";
 
+type Todo = {
+  id: number | string;
+  title: string;
+};
 
-export default function TodoItem({}) {
+export default function TodoItem({ todo }: { todo: Todo }) {
   const dispatch = useDispatch();
   return (
     <ListGroupItem key={todo.id}>
@@ -15,4 +18,5 @@ export default function TodoItem({}) {
               id="wd-set-todo-click"> Edit </Button>
       {todo.title}
     </ListGroupItem>
-);}
+  );
+}
