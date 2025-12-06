@@ -50,6 +50,10 @@ const coursesSlice = createSlice({
         (e) => !(e.user === userId && e.course === courseId)
       );
     },
+    
+    setCourses: (state, { payload: courses }) => {
+      state.courses = courses;
+    }
   },
 });
 
@@ -60,6 +64,7 @@ export const {
   toggleShowEnrollments,
   enrollCourse,
   unenrollCourse,
+  setCourses,
 } = coursesSlice.actions;
 
 export default coursesSlice.reducer;
