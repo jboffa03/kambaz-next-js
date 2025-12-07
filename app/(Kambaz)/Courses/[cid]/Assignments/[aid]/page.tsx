@@ -3,7 +3,7 @@
 
 import { useParams, useRouter } from "next/navigation";
 import { useSelector, useDispatch } from "react-redux";
-import { setAssignments, updateAssignment } from "../reducer";
+import { setAssignments } from "../reducer";
 import { Container, Form, Button, Row, Col } from "react-bootstrap";
 import { useState } from "react";
 import { v4 as uuidv4 } from "uuid";
