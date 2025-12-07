@@ -7,23 +7,39 @@ import { BsGripVertical } from "react-icons/bs";
 import { FaPlus, FaTrash } from "react-icons/fa6";
 import { IoEllipsisVertical, IoNewspaperOutline } from "react-icons/io5";
 import { useSelector, useDispatch } from "react-redux";
-import { deleteAssignment } from "./reducer";
+import { setAssignments } from "./reducer";
 import LessonControlButtons from "../Modules/LessonControlButtons";
 import AssignmentControls from "./AssignmentControls";
 import { CiSearch } from "react-icons/ci";
 import { ParamValue } from "next/dist/server/request/params";
-import { Key, ReactElement, JSXElementConstructor, ReactNode, ReactPortal } from "react";
+import * as client from "../Assignments/client";
+import { useEffect } from "react";
+
 
 export default function Assignments() {
   const { cid } = useParams();
   const dispatch = useDispatch();
   const { assignments } = useSelector((state: any) => state.assignmentsReducer);
 
+  const onRemoveAssignment = async (assignmentId: string) => {
+      await client.deleteAssignment(assignmentId);
+      dispatch(setAssignments(assignments.filter((a: any) => a._id !== assignmentId)));
+    };
+
+  const fetchAssignments = async () => {
+    const assignments = await client.findAssignmentsForCourse(cid as string);
+    dispatch(setAssignments(assignments));
+  };
+  useEffect(() => {
+    fetchAssignments();
+  }, []);
+
+
   const courseAssignments = assignments.filter((a: { course: ParamValue; }) => a.course === cid);
 
   const confirmDelete = (id: string) => {
     if (confirm("Are you sure you want to delete this assignment?")) {
-      dispatch(deleteAssignment(id));
+      onRemoveAssignment(id);
     }
   };
 
@@ -86,9 +102,11 @@ export default function Assignments() {
         {courseAssignments.map((assignment: 
         { _id: string; 
           title: string; 
+          dueDate: any;
+          availableFrom: any;
           availableUntil: any; 
-          dueDate: any; 
-          points: any; }) => (
+          points: any; 
+          }) => (
           <ListGroupItem key={assignment._id} className="d-flex justify-content-between align-items-start">
             <Link
               href={`/Courses/${cid}/Assignments/${assignment._id}`}
@@ -99,8 +117,8 @@ export default function Assignments() {
                   {assignment.title} <LessonControlButtons />
                   <br />
                   <div className="d-inline-block ms-5 fs-6">
-                    <span style={{ color: "red" }}> Multiple Modules</span> |{" "}
-                    <b> Not available until</b> {assignment.availableUntil || "TBD"} |{" "}
+                    <b> Available after</b> {assignment.availableFrom || "TBD"} |{" "}
+                    <b> Not available after</b> {assignment.availableUntil || "TBD"} |{" "}
                     <br />
                     <b> Due</b> {assignment.dueDate || "TBD"} | {assignment.points || "100"} points
                   </div>

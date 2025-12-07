@@ -3,11 +3,13 @@
 
 import { useParams, useRouter } from "next/navigation";
 import { useSelector, useDispatch } from "react-redux";
-import { addAssignment, updateAssignment } from "../reducer";
+import { setAssignments, updateAssignment } from "../reducer";
 import { Container, Form, Button, Row, Col } from "react-bootstrap";
 import { useState } from "react";
 import { v4 as uuidv4 } from "uuid";
 import { ParamValue } from "next/dist/server/request/params";
+import * as client from "../client";
+import { on } from "events";
 
 export default function AssignmentEditor() {
   const { cid, aid } = useParams();
@@ -32,12 +34,25 @@ export default function AssignmentEditor() {
     }
   );
 
+  const onCreateAssignmentForCourse = async (assignment: any) => {
+      if (!cid) return;
+      // const newAssignment = { ...assignment, course: cid };
+      const createdAssignment = await client.createAssignmentForCourse(cid as string, assignment);
+      dispatch(setAssignments([...assignments, createdAssignment]));
+    };
+
+  const onUpdateAssignment = async (assignment: any) => {
+      await client.updateAssignment(assignment);
+      const newAssignment = assignments.map((a: any) => a._id === assignment._id ? assignment : a );
+      dispatch(setAssignments(newAssignment));
+    };
+
   const update = (field: string, value: any) =>
     setForm({ ...form, [field]: value });
 
   const save = () => {
-    if (isNew) dispatch(addAssignment(form));
-    else dispatch(updateAssignment(form));
+    if (isNew) onCreateAssignmentForCourse(form);
+    else onUpdateAssignment(form);
     router.push(`/Courses/${cid}/Assignments`);
   };
 
