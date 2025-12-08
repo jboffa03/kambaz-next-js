@@ -1,39 +1,35 @@
+'use client';
 import Link from "next/link";
+import { usePathname } from "next/navigation";
+import "../../styles.css";
+import { ListGroupItem } from "react-bootstrap";
+
+
 export default function CourseNavigation() {
+  const pathname = usePathname();
+  const courseIdFromPath = pathname.split('/')[2]; 
+  
+  const links = [
+    {label: "Home", path: `/Courses/${courseIdFromPath}/Home`},
+    {label: "Modules", path: `/Courses/${courseIdFromPath}/Modules`},
+    {label: "Piazza", path: `https://piazza.com`},
+    {label: "Zoom", path: `https://zoom.us`},
+    {label: "Assignments", path: `/Courses/${courseIdFromPath}/Assignments`},
+    {label: "Quizzes", path: `/Courses/${courseIdFromPath}/Quizzes`},
+    {label: "Grades", path: `/Courses/${courseIdFromPath}/Grades`},
+    {label: "People", path: `/Courses/${courseIdFromPath}/People/Table`},
+  ];
+ 
   return (
-    <div id="wd-courses-navigation">
-      <Link href="/Courses/1234/Home" id="wd-course-home-link">
-        Home
-      </Link>
-      <br />
-      <Link href="/Courses/1234/Modules" id="wd-course-modules-link">
-        Modules
-      </Link>
-      <br />
-      <Link href="/Courses/1234/Piazza" id="wd-course-piazza-link">
-        Piazza
-      </Link>
-      <br />
-      <Link href="/Courses/1234/Zoom" id="wd-course-zoom-link">
-        Zoom
-      </Link>
-      <br />
-      <Link href="/Courses/1234/Assignments" id="wd-course-quizzes-link">
-        Assignments
-      </Link>
-      <br />
-      <Link href="/Courses/1234/Quizzes" id="wd-course-assignments-link">
-        Quizzes
-      </Link>
-      <br />
-      <Link href="/Courses/1234/Grades" id="wd-course-grades-link">
-        Grades
-      </Link>
-      <br />
-      <Link href="/Courses/1234/People/Table" id="wd-course-people-link">
-        People
-      </Link>
-      <br />
+    <div id="wd-courses-navigation" className="wd list-group fs-5 rounded-0">
+      {links.map((link) => (
+        <ListGroupItem key={link.path} as={Link} href={link.path}
+          className={`bg-white text-center border-0
+              ${pathname.includes(link.label) ? "text-black" : "text-danger bg-black"}`}>
+          <br />
+          {link.label}
+        </ListGroupItem>
+      ))}
     </div>
   );
 }

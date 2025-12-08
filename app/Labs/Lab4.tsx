@@ -1,8 +1,10 @@
 import Link from "next/link";
+import ReduxExamples from "./Lab4/ReduxExamples/ReduxExamples";
 export default function Labs() {
   return (
     <div id="wd-labs">
       <h1>Labs</h1>
+      <h3>Julia Boffa</h3>
       <ul>
         <li>
           <Link href="/Labs/Lab1" id="wd-lab1-link">
@@ -20,10 +22,16 @@ export default function Labs() {
           </Link>
         </li>
         <li>
+          <Link href="/Labs/Lab4" id="wd-lab4-link">
+            Lab 4: Maintaining State in React{" "}
+          </Link>
+        </li>
+        <li>
           <Link href="/" id="wd-lab3-link">
             Kambaz{" "}
           </Link>{" "}
         </li>
+        <ReduxExamples />
       </ul>
     </div>
   );

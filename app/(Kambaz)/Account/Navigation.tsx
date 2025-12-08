@@ -1,19 +1,22 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
+"use client";
 import Link from "next/link";
-export default function KambazNavigation() {
-  return (
-    <div id="wd-kambaz-navigation">
-      <Link href="/Account/Signin" id="wd-signin-link">
-        SignIn
-      </Link>
-      <br />
-      <Link href="/Account/Signup" id="wd-signup-link">
-        SignUp
-      </Link>
-      <br />
-      <Link href="/Account/Profile" id="wd-Profile-link">
-        Profile
-      </Link>
-      <br />
-    </div>
-  );
-}
+import { usePathname } from "next/navigation";
+import { Nav, NavItem, NavLink } from "react-bootstrap";
+import { useSelector } from "react-redux";
+
+
+export default function AccountNavigation() {
+  const { currentUser } = useSelector((state: any) => state.accountReducer);
+  const links = currentUser ? ["Profile"] : ["Signin", "Signup"];
+ const pathname = usePathname();
+ 
+ return (
+   <Nav variant="pills">
+     {links.map((link) => (
+       <NavItem key={link}>
+         <NavLink as={Link} href={link} active={pathname.endsWith(link.toLowerCase())}>
+           {link} </NavLink> </NavItem>
+     ))}
+   </Nav>
+);}

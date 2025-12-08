@@ -1,144 +1,153 @@
-import Link from "next/link";
+/* eslint-disable @typescript-eslint/no-explicit-any */
+"use client";
+
+import { useParams, useRouter } from "next/navigation";
+import { useSelector, useDispatch } from "react-redux";
+import { setAssignments } from "../reducer";
+import { Container, Form, Button, Row, Col } from "react-bootstrap";
+import { useState } from "react";
+import { v4 as uuidv4 } from "uuid";
+import { ParamValue } from "next/dist/server/request/params";
+import * as client from "../client";
+import { on } from "events";
 
 export default function AssignmentEditor() {
+  const { cid, aid } = useParams();
+  const dispatch = useDispatch();
+  const router = useRouter();
+
+  const isNew = aid === "new";
+  const { assignments } = useSelector((state: any) => state.assignmentsReducer);
+
+  const dbAssign = assignments.find((a: { _id: ParamValue; }) => a._id === aid);
+
+  const [form, setForm] = useState(
+    dbAssign || {
+      _id: uuidv4(),
+      title: "",
+      description: "",
+      points: 0,
+      dueDate: "",
+      availableFrom: "",
+      availableUntil: "",
+      course: cid,
+    }
+  );
+
+  const onCreateAssignmentForCourse = async (assignment: any) => {
+      if (!cid) return;
+      // const newAssignment = { ...assignment, course: cid };
+      const createdAssignment = await client.createAssignmentForCourse(cid as string, assignment);
+      dispatch(setAssignments([...assignments, createdAssignment]));
+    };
+
+  const onUpdateAssignment = async (assignment: any) => {
+      await client.updateAssignment(assignment);
+      const newAssignment = assignments.map((a: any) => a._id === assignment._id ? assignment : a );
+      dispatch(setAssignments(newAssignment));
+    };
+
+  const update = (field: string, value: any) =>
+    setForm({ ...form, [field]: value });
+
+  const save = () => {
+    if (isNew) onCreateAssignmentForCourse(form);
+    else onUpdateAssignment(form);
+    router.push(`/Courses/${cid}/Assignments`);
+  };
+
   return (
-    <div id="wd-assignments-editor">
-      <label htmlFor="wd-name">Assignment Name</label>
-      <input id="wd-name" value="A1 - ENV + HTML" />
-      <br />
-      <br />
-      <textarea id="wd-description">
-        The assignment is available online Submit a link to the landing page of
-      </textarea>
-      <br />
-      <table>
-        <tr>
-          <td align="right" valign="top">
-            <label htmlFor="wd-points">Points</label>
-          </td>
-          <td>
-            <input id="wd-points" value={100} />
-          </td>
-        </tr>
-        <br />
+    <Container id="wd-assignments-editor" className="py-3">
+      <h3>{isNew ? "Create Assignment" : "Edit Assignment"}</h3>
 
-        <tr>
-          <td align="right" valign="top">
-            <label htmlFor="wd-group">Assignment Group</label>
-          </td>
-          <td>
-            <select id="wd-group">
-              <option selected value="ASSIGNMENTS">
-                ASSIGNMENTS
-              </option>
-              <option value="LABS">LABS</option>
-              <option value="EXAMS">EXAMS</option>
-            </select>
-          </td>
-        </tr>
-        <br />
+      <Form>
+        <Form.Group className="mb-3">
+          <Form.Label>Assignment Name</Form.Label>
+          <Form.Control
+            value={form.title}
+            onChange={(e) => update("title", e.target.value)}
+          />
+        </Form.Group>
 
-        <tr>
-          <td align="right" valign="top">
-            <label htmlFor="wd-display-grade-as">Display Grade as</label>
-          </td>
-          <td>
-            <select id="wd-display-grade-as">
-              <option selected value="Percentage">
-                Percentage
-              </option>
-              <option value="Points">Points</option>
-            </select>
-          </td>
-        </tr>
-        <br />
+        <Form.Group className="mb-3">
+          <Form.Label>Description</Form.Label>
+          <Form.Control
+            as="textarea"
+            rows={3}
+            value={form.description}
+            onChange={(e) => update("description", e.target.value)}
+          />
+        </Form.Group>
 
-        <tr>
-          <td align="right" valign="top">
-            <label htmlFor="wd-submission-type">Submission Type</label>
-          </td>
-          <td>
-            <select id="wd-submission-type">
-              <option selected value="Online">
-                Online
-              </option>
-              <option value="In Person">In Person</option>
-            </select>
-          </td>
-        </tr>
-        <br />
+        <Row className="mb-3">
+          <Col>
+            <Form.Label>Points</Form.Label>
+            <Form.Control
+              type="number"
+              value={form.points}
+              onChange={(e) => update("points", Number(e.target.value))}
+            />
+          </Col>
+        </Row>
 
-        <tr>
-          <td align="left" valign="top">
-            <label htmlFor="wd-text-entry">Online Entry Options</label>
-          </td>
-        </tr>
-        <input type="checkbox" name="check-text-entry" id="wd-text-entry" />
-        <label htmlFor="wd-text-entry">Text Entry</label>
-        <br />
+        <Row className="mb-3">
+          <Col>
+          <Form.Group as={Row} controlId="wd-group">
+            <Form.Label>
+              Assignment Group
+            </Form.Label>
+            <Col sm={8}>
+              <Form.Select defaultValue={"ASSIGNMENTS"}>
+                <option value="ASSIGNMENTS">ASSIGNMENTS</option>
+                <option value="LABS">LABS</option>
+                <option value="EXAMS">EXAMS</option>
+              </Form.Select>
+            </Col>
+          </Form.Group>
+         </Col>
+        </Row>
 
-        <input type="checkbox" name="check-text-entry" id="wd-website-url" />
-        <label htmlFor="wd-website-url">Website URL</label>
-        <br />
+        <Row className="mb-3">
+          <Col>
+            <Form.Label>Due Date</Form.Label>
+            <Form.Control
+              type="date"
+              value={form.dueDate}
+              onChange={(e) => update("dueDate", e.target.value)}
+            />
+          </Col>
+        </Row>
+        
 
-        <input
-          type="checkbox"
-          name="check-text-entry"
-          id="wd-media-recordings"
-        />
-        <label htmlFor="wd-media-recordings">Media Recordings</label>
-        <br />
+        <Row className="mb-3">
+          <Col>
+            <Form.Label>Available From</Form.Label>
+            <Form.Control
+              type="date"
+              value={form.availableFrom}
+              onChange={(e) => update("availableFrom", e.target.value)}
+            />
+          </Col>
+          <Col>
+            <Form.Label>Available Until</Form.Label>
+            <Form.Control
+              type="date"
+              value={form.availableUntil}
+              onChange={(e) => update("availableUntil", e.target.value)}
+            />
+          </Col>
+        </Row>
 
-        <input
-          type="checkbox"
-          name="check-text-entry"
-          id="wd-student-annotation"
-        />
-        <label htmlFor="wd-student-annotation">Student Annotation</label>
-        <br />
+        <div className="d-flex gap-2">
+          <Button variant="secondary" onClick={() => router.back()}>
+            Cancel
+          </Button>
 
-        <input type="checkbox" name="check-text-entry" id="wd-file-upload" />
-        <label htmlFor="wd-file-upload">File Upload</label>
-        <br />
-        <br />
-
-        <tr>
-          <td align="left" valign="top">
-            <label htmlFor="wd-assign-to">Assign to</label>
-          </td>
-        </tr>
-        <tr>
-          <td align="left" valign="top">
-            <input id="wd-assign-to" value={"Everyone"} />
-          </td>
-        </tr>
-        <br />
-
-        <label htmlFor="wd-due-date"> Due </label>
-        <br />
-        <input type="date" value="2024-05-13" id="wd-due-date" />
-        <br />
-        <br />
-
-        <label htmlFor="wd-available-from"> Available from </label>
-        <label htmlFor="wd-available-until" style={{ marginLeft: "12px" }}>
-          {" "}
-          Until{" "}
-        </label>
-        <br />
-        <input type="date" value="2024-05-06" id="wd-available-from" />
-        <input type="date" value="2024-05-20" id="wd-available-until" />
-        <br />
-
-        <br />
-        <Link
-          href="/Courses/1234/Assignments"
-          className="wd-dashboard-course-link"
-        >
-          <button id="wd-cancel">Cancel</button>
-          <button id="wd-save">Save</button>
-        </Link>
-      </table>
-    </div>
+          <Button variant="danger" onClick={save}>
+            Save
+          </Button>
+        </div>
+      </Form>
+    </Container>
   );
 }
