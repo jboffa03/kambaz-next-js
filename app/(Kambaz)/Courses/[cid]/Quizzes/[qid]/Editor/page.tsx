@@ -2,23 +2,21 @@
 "use client";
 
 import { useParams, useRouter } from "next/navigation";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Form, Button, Nav, FormCheck } from "react-bootstrap"; 
 import { useDispatch, useSelector } from "react-redux";
 import { setQuizzes } from "../../reducer";
-
-
 import * as client from "../../client";
 import { ParamValue } from "next/dist/server/request/params";
-import { AnyARecord } from "dns";
+
 
 export default function QuizDetail() {
-  const { cid, qid, tab } = useParams();
+  const { cid, qid} = useParams();
   const dispatch = useDispatch();
   const router = useRouter();
 
   const isNew = qid === "new";
-  const activeTab = (tab as string) || "details";
+  const activeTab = "details";
 
   const { currentUser } = useSelector((state: any) => state.accountReducer);
   const { quizzes } = useSelector((state: any) => state.quizzesReducer);
@@ -50,11 +48,18 @@ export default function QuizDetail() {
     }
   );
 
-  const onCreateQuizForCourse = async (Quiz: any) => {
-    if (!cid) return;
-    const createdQuiz = await client.createQuiz(cid as string, Quiz);
-    dispatch(setQuizzes([...quizzes, createdQuiz]));
-  };
+  const fetchQuizzes = async () => {
+      const data = await client.fetchQuiz(qid as string);
+      dispatch(setQuizzes(data));
+    };
+
+  useEffect(() => {fetchQuizzes();}, []);
+  
+  // const onCreateQuizForCourse = async (Quiz: any) => {
+  //   if (!cid) return;
+  //   const createdQuiz = await client.createQuiz(cid as string, Quiz);
+  //   dispatch(setQuizzes([...quizzes, createdQuiz]));
+  // };
 
   const onUpdateQuiz = async (Quiz: any) => {
     await client.updateQuiz(qid as string, Quiz);
@@ -64,6 +69,11 @@ export default function QuizDetail() {
     dispatch(setQuizzes(newQuiz));
   };
 
+  const onDeleteQuiz = async (quizId: string) => {
+      await client.deleteQuiz(qid as string);
+      dispatch(setQuizzes(quizzes.filter((q: any) => q._id !== quizId)));
+    };
+
   const update = (field: string, value: any) =>
     setQuiz({ ...quiz, [field]: value });
 
@@ -71,24 +81,23 @@ export default function QuizDetail() {
 
 
   const save = () => {
-    if (isNew) onCreateQuizForCourse(quiz);
-    else onUpdateQuiz(quiz);
+    onUpdateQuiz(quiz);
     router.push(`/Courses/${cid}/Quizzes/${qid}/Details`);
   };
 
   const saveAndPublish = () => {
     const publishedQuiz = { ...quiz, published: true };
-
-    if (isNew) onCreateQuizForCourse(publishedQuiz);
-    else onUpdateQuiz(publishedQuiz);
+    onUpdateQuiz(publishedQuiz);
 
     router.push(`/Courses/${cid}/Quizzes`);
   };
 
-  const cancel = () => router.push(`/Courses/${cid}/Quizzes`);
+  const cancel = () => {
+    onDeleteQuiz(quiz._id);
+    router.push(`/Courses/${cid}/Quizzes`);
+  }
 
-
-  if (currentUser.role === "STUDENT") {
+  if (currentUser?.role === "STUDENT") {
     return (
       <div className="container mt-4">
         <h2>{quiz.title}</h2>
@@ -190,9 +199,8 @@ export default function QuizDetail() {
           <Form.Label><b>Shuffle Answers</b></Form.Label>
           <FormCheck 
           type="switch" 
-          defaultChecked={quiz.shuffleAnswers} 
+          checked={quiz.shuffleAnswers} 
           label={quiz.shuffleAnswers ? "Yes" : "No"}
-          value={quiz.shuffleAnswers ? "Yes" : "No"}
           onChange={(e: any) =>  setQuiz({ ...quiz, shuffleAnswers: e.target.checked})}/>
         </Form.Group>
 
@@ -200,9 +208,8 @@ export default function QuizDetail() {
           <Form.Label><b>Time Limit (minutes)</b></Form.Label>
           <FormCheck 
           type="switch" 
-          defaultChecked={quiz.haveTimeLimit} 
+          checked={quiz.haveTimeLimit || false} 
           label={quiz.haveTimeLimit ? "Yes" : "No"}
-          value={quiz.haveTimeLimit ? "Yes" : "No"}
           onChange={(e: any) =>  setQuiz({ ...quiz, haveTimeLimit: e.target.checked})}/>
         </Form.Group>
 
@@ -222,9 +229,8 @@ export default function QuizDetail() {
           <Form.Label><b>Multiple Attempts</b></Form.Label>
           <FormCheck 
           type="switch" 
-          defaultChecked={quiz.multipleAttempts} 
+          checked={quiz.multipleAttempts} 
           label={quiz.multipleAttempts ? "Yes" : "No"}
-          value={quiz.multipleAttempts ? "Yes" : "No"}
           onChange={(e: any) =>  setQuiz({ ...quiz, multipleAttempts: e.target.checked})}/>
         </Form.Group>
 
