@@ -15,7 +15,6 @@ export default function QuizDetail() {
   const dispatch = useDispatch();
   const router = useRouter();
 
-  const isNew = qid === "new";
   const activeTab = "details";
 
   const { currentUser } = useSelector((state: any) => state.accountReducer);

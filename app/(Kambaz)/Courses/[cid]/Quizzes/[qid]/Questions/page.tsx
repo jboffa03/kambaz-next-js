@@ -10,7 +10,7 @@ import * as client from "../../client";
 import { setQuestions } from "../Questions/reducer"
 
 export default function QuestionsList() {
-  const { cid, qid, tab } = useParams();
+  const { cid, qid } = useParams();
   const router = useRouter();
   const dispatch = useDispatch();
 
@@ -46,7 +46,7 @@ export default function QuestionsList() {
 
   useEffect(() => {fetchQuestion();}, [qid]);
 
-  const totalPoints = (questions || [])
+  const totalPoints = (questions)
     .filter((q: any) => q.quiz === qid)
     .reduce((sum: number, q: any) => sum + (q.points || 0), 0);
 
