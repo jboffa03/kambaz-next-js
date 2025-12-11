@@ -9,7 +9,6 @@ import { useState } from "react";
 import { v4 as uuidv4 } from "uuid";
 import { ParamValue } from "next/dist/server/request/params";
 import * as client from "../client";
-import { on } from "events";
 
 export default function AssignmentEditor() {
   const { cid, aid } = useParams();
