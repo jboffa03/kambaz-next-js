@@ -17,17 +17,17 @@ export const findQuizzesForCourse = async (courseId: string) => {
 };
 
 export const createQuiz = async (courseId: string, quiz: any) => {
-  const response = await axios.post(`${COURSE_API}/${courseId}/quizzes`, quiz);
+  const response = await axiosWithCredentials.post(`${COURSE_API}/${courseId}/quizzes`, quiz);
   return response.data;
 };
 
 export const deleteQuiz = async (quizId: string) => {
-  const response = await axios.delete(`${QUIZ_API}/${quizId}`);
+  const response = await axiosWithCredentials.delete(`${QUIZ_API}/${quizId}`);
   return response.data;
 };
 
 export const updateQuiz = async (quizId: string, quiz: any) => {
-  const response = await axios.put(`${QUIZ_API}/${quizId}`, quiz);
+  const response = await axiosWithCredentials.put(`${QUIZ_API}/${quizId}`, quiz);
   return response.data;
 };
 
@@ -47,12 +47,12 @@ export const findQuestionsForQuiz = async (qid: string) => {
 }
 
 export const createQuestion = async (qid: string, question: any) => {
-  const response = await axios.post(`${QUIZ_API}/${qid}/questions`, question);
+  const response = await axiosWithCredentials.post(`${QUIZ_API}/${qid}/questions`, question);
   return response.data;
 }
 
 export const updateQuestion = async (questionId: string, question: any) => {
-  const response = await axios.put(`${QUESTION_API}/${questionId}`, question);
+  const response = await axiosWithCredentials.put(`${QUESTION_API}/${questionId}`, question);
   return response.data;
 }
 

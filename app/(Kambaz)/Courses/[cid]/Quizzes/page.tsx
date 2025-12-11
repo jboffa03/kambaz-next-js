@@ -38,7 +38,8 @@ export default function Quizzes() {
       description: "",
       points: 0,
       QuizGroup: "Quizzes",
-      shuffle: true,
+      shuffleAnswers: true,
+      haveTimeLimit: true,
       timeLimit: 20,
       multipleAttempts: false,
       attemptsAllowed: 1,
@@ -56,7 +57,7 @@ export default function Quizzes() {
     if (!cid) return;
     const createdQuiz = await client.createQuiz(cid as string, quiz);
     dispatch(setQuizzes([...quizzes, createdQuiz]));
-    router.push(`/Courses/${cid}/Quizzes/${createdQuiz._id}/Details`)
+    router.push(`/Courses/${cid}/Quizzes/${createdQuiz._id}/Editor`)
   };
 
   useEffect(() => {fetchQuizzes();}, []);

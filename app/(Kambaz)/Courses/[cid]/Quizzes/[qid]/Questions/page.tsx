@@ -52,7 +52,7 @@ export default function QuestionsList() {
 
   const quizQuestions = questions.filter((q: any) => q.quiz === qid);
 
-  const activeTab = (tab as string) || "questions";
+  const activeTab = "questions";
 
   return (
     <div className="container mt-3">
