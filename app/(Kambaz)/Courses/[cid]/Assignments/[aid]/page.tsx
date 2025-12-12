@@ -6,7 +6,6 @@ import { useSelector, useDispatch } from "react-redux";
 import { setAssignments } from "../reducer";
 import { Container, Form, Button, Row, Col } from "react-bootstrap";
 import { useState } from "react";
-import { v4 as uuidv4 } from "uuid";
 import { ParamValue } from "next/dist/server/request/params";
 import * as client from "../client";
 
@@ -22,7 +21,6 @@ export default function AssignmentEditor() {
 
   const [form, setForm] = useState(
     dbAssign || {
-      _id: uuidv4(),
       title: "",
       description: "",
       points: 0,
@@ -35,7 +33,6 @@ export default function AssignmentEditor() {
 
   const onCreateAssignmentForCourse = async (assignment: any) => {
       if (!cid) return;
-      // const newAssignment = { ...assignment, course: cid };
       const createdAssignment = await client.createAssignmentForCourse(cid as string, assignment);
       dispatch(setAssignments([...assignments, createdAssignment]));
     };
