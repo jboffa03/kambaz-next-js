@@ -12,7 +12,7 @@ export default function Signup() {
   const [user, setUser] = useState({'username': '', 'password': ''});
   const dispatch = useDispatch();
   const signup = async () => {
-    const currentUser = await client.signup(user);
+    const currentUser = await client.createUser(user);
     dispatch(setCurrentUser(currentUser));
     redirect("/Account/Profile");
   };

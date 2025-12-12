@@ -77,42 +77,37 @@ export default function Dashboard() {
     })));};
 
   const fetchAllEnrollments = async () => {
-    try {
-      const enrollments = await client.findMyEnrollments();
-      dispatch(setEnrollments(enrollments));
-    } catch (error) {
-      console.error(error);
-    }
-  };
+  try {
+    const enrollments = await client.findMyCourses();
+    dispatch(setEnrollments(enrollments));
+  } catch (error) {
+    console.error(error);
+  }
+};
+
 
   const onEnrollCourse = async (courseId: string) => {
-  const newEnrollment = await client.createEnrollment(courseId);
+  const newEnrollment = await client.enrollIntoCourse(currentUser._id, courseId);
   dispatch(setEnrollments([...enrollments, newEnrollment]));
 };
 
   
-
-  const onUnenrollCourse = async (enrollmentId: string) => {
-    await client.deleteEnrollment(enrollmentId);
+  const onUnenrollCourse = async (courseId: string) => {
+    await client.unenrollFromCourse(currentUser._id, courseId);
     dispatch(
-      setEnrollments(enrollments.filter((enrollment: any) => enrollment._id !== enrollmentId))
+      setEnrollments(enrollments.filter((e: any) => e.user !== currentUser._id && e.course !== courseId))
     );
   };
 
   useEffect(() => {
-    fetchCourses();
     fetchAllEnrollments();
-  }, [currentUser]);
+  }, [currentUser, enrollments]);
 
   if (!currentUser) return null;
   const isFaculty = currentUser.role === "FACULTY";
   const isStudent = currentUser.role === "STUDENT";
 
-  const isEnrolled = (courseId: string) => {
-    return enrollments.find(
-      (e: any) => e.course === courseId && e.user === currentUser._id
-    );
-  };
+  
 
 
   return (
@@ -167,7 +162,6 @@ export default function Dashboard() {
 
       <Row xs={1} md={5} className="g-4">
         {courses.map((course: any) => {
-          const enrollment = isEnrolled(course._id);
           return (
             <Col
               key={course._id}
@@ -193,10 +187,11 @@ export default function Dashboard() {
                   </Link>
 
                   {isStudent ? (
-                    enrollment ? (
+                    (enrollments.some((e: any) => e._id === course._id)
+                  ) ? (
                       <button
                         className="btn btn-danger float-end"
-                        onClick={() => onUnenrollCourse(enrollment._id)}>
+                        onClick={() => onUnenrollCourse(course._id)}>
                         Unenroll
                       </button>
                     ) : (
@@ -205,7 +200,6 @@ export default function Dashboard() {
                         onClick={() => onEnrollCourse(course._id)}>
                         Enroll
                       </button>
-
                     )
                   ) : null}
 

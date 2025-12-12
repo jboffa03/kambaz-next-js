@@ -11,7 +11,6 @@ import { setAssignments } from "./reducer";
 import LessonControlButtons from "../Modules/LessonControlButtons";
 import AssignmentControls from "./AssignmentControls";
 import { CiSearch } from "react-icons/ci";
-import { ParamValue } from "next/dist/server/request/params";
 import * as client from "../Assignments/client";
 import { useEffect } from "react";
 
@@ -32,10 +31,8 @@ export default function Assignments() {
   };
   useEffect(() => {
     fetchAssignments();
-  }, []);
+  }, [cid]);
 
-
-  const courseAssignments = assignments.filter((a: { course: ParamValue; }) => a.course === cid);
 
   const confirmDelete = (id: string) => {
     if (confirm("Are you sure you want to delete this assignment?")) {
@@ -99,7 +96,7 @@ export default function Assignments() {
             
 
       <ListGroup>
-        {courseAssignments.map((assignment: 
+        {assignments.map((assignment: 
         { _id: string; 
           title: string; 
           dueDate: any;
